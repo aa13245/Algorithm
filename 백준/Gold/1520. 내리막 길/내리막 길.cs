@@ -9,7 +9,7 @@ namespace Cote1
         static int raw, cal;
         static int[][] map;
         static int[,] dp;
-        static SortedSet<(int, int, int)> pq;
+        static SortedSet<(int, int)> pq;
         static void Main()
         {   
             // 입력
@@ -24,9 +24,9 @@ namespace Cote1
             }
 
             // dp
-            pq = new SortedSet<(int, int, int)>(Comparer<(int, int, int)>.Create((a, b) =>
+            pq = new SortedSet<(int, int)>(Comparer<(int, int)>.Create((a, b) =>
             {   // 내림차순
-                int result = b.Item3.CompareTo(a.Item3);
+                int result = map[b.Item2][b.Item1].CompareTo(map[a.Item2][a.Item1]);
                 if (result == 0)
                 {
                     result = a.Item1.CompareTo(b.Item1);
@@ -38,7 +38,7 @@ namespace Cote1
                 return result;
             }));
             dp[0, 0] = 1;
-            pq.Add((0, 0, map[0][0]));
+            pq.Add((0, 0));
             while (pq.Count != 0)
             {
                 var value = pq.First();
@@ -53,25 +53,25 @@ namespace Cote1
             if (x > 0 && (map[y][x] > map[y][x - 1]))
             {
                 dp[y, x - 1] += dp[y, x];
-                pq.Add((x - 1, y, map[y][x - 1]));
+                pq.Add((x - 1, y));
             }
             // 우
             if (x < cal - 1 && (map[y][x] > map[y][x + 1]))
             {
                 dp[y, x + 1] += dp[y, x];
-                pq.Add((x + 1, y, map[y][x + 1]));
+                pq.Add((x + 1, y));
             }
             // 상
             if (y > 0 && (map[y][x] > map[y - 1][x]))
             {
                 dp[y - 1, x] += dp[y, x];
-                pq.Add((x, y - 1, map[y - 1][x]));
+                pq.Add((x, y - 1));
             }
             // 하
             if (y < raw - 1 && (map[y][x] > map[y + 1][x]))
             {
                 dp[y + 1, x] += dp[y, x];
-                pq.Add((x, y + 1, map[y + 1][x]));
+                pq.Add((x, y + 1));
             }
         }
     }
